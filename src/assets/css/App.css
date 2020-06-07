@@ -1,0 +1,103 @@
+.exam-app {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+header, footer {
+    text-align: center;
+}
+
+.exam-area {
+    margin:20px 10px;
+}
+
+.exam-area .question {
+    position: relative;
+    margin-left: 30px;
+}
+
+.exam-area .question-number {
+    position: absolute;
+    right: 100%;
+    margin-right:10px;
+}
+
+.exam-area .options-list, .exam-area .review-list {
+    list-style: none;
+    padding: 0;
+}
+
+.exam-area .options-list li {
+    line-height: 1.4em;
+}
+
+.exam-area .options-list li input {
+    margin: 0.25em 10px auto 5px;
+    line-height: 1.4em;
+    height: 1.4em;
+}
+
+.exam-area .options-list li .option-content {
+    display: inline-block;
+}
+
+.control-actions {
+    background-color: rgb(226, 237, 226);
+    display: inline-block;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.control-actions .left, .control-actions .right {
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.control-actions .left {
+    float: left;
+}
+
+.control-actions .right {
+    float: right;
+}
+
+button {
+    font-family: "Arial Narrow", sans-serif;
+    background-color: darkgray;
+    border-radius: 5px;
+    padding: 5px 15px;
+    border: 1px solid black;
+}
+
+button.primary {
+    color: aliceblue;
+    background-color: darkcyan;
+}
+
+button.secondary {
+    color: black;
+    background-color: white;
+    border-color: darkseagreen;
+}
+
+button.highlight {
+    color: oldlace;
+    background-color: brown;
+}
+
+.review-list .review-question-link {
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+}
+
+.review-list .review-question-link a {
+
+}
+
+.review-list .review-question-link.question-marked a:after {
+    display: inline-block;
+    content: " ";
+    width: 10px;
+    height: 10px;
+    background-color: brown;
+}

@@ -1,0 +1,41 @@
+{
+  "questions": [
+    {
+      "question": "<strong>What's the application platform?</strong>",
+      "options": [
+        "React JS",
+        "Angular",
+        "PHP",
+        "Knockout JS"
+      ],
+      "answers": [
+        "React JS"
+      ]
+    },
+    {
+      "question": "<p>Question 2?</p>",
+      "options": [
+        "Answer 1",
+        "Answer 2",
+        "Answer 3",
+        "Answer 4"
+      ],
+      "answers": [
+        "Answer 4"
+      ]
+    },
+    {
+      "question": "<p>Question 3? Choose 2.</p>",
+      "options": [
+        "Answer 1",
+        "Answer 2",
+        "Answer 3",
+        "Answer 4"
+      ],
+      "answers": [
+        "Answer 2",
+        "Answer 3"
+      ]
+    }
+  ]
+}
