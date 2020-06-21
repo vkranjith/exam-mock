@@ -2,11 +2,26 @@ import React from 'react';
 import PropTypes from "prop-types";
 import renderHTML from 'react-render-html';
 import {updateAnswer} from "../../actions";
+import {useDispatch, useStore} from 'react-redux';
 
-const Option = ({id, option, value, type, name, selected, dispatch, selectedAnswers = []}) => {
+const Option = ({id, option, value, type, name, classNames = ""}) => {
     let input;
+    let dispatch = useDispatch();
+    let allAnswers = useStore().getState().question.answers;
+    let selected = false;
+    for (let i=0; i<allAnswers.length; i++) {
+        let item = allAnswers[i];
+        if (item.question === name) {
+            for (let j=0; j<item.answers.length; j++) {
+                let answer = item.answers[j];
+                if (answer === value) {
+                    selected = true;
+                }
+            }
+        }
+    }
     return (
-        <li id={"option_" + id} className="option">
+        <li id={"option_" + id} className={"option " + classNames}>
             <label>
                 <input
                     type={type}
@@ -14,33 +29,29 @@ const Option = ({id, option, value, type, name, selected, dispatch, selectedAnsw
                     name={name}
                     ref={node => (input = node)}
                     onChange={() => {
-                        let answers = selectedAnswers;
-                        let answerUpdated = false;
-                        answers.map((answer) => {
-                            if (type === "radio" && answer.question === name) {
-                                answerUpdated = true;
-                                answer.answers = [input.value];
-                                return answer;
-                            } else if (answer.question === name) {
-                                answerUpdated = true;
-                                answer.answers.push(input.value);
+                        let answer = allAnswers[name];
+                        if (answer) {
+                            if (type === "radio") {
+                                answer.answers = [Number(input.value)];
+                            } else {
+                                answer.answers.push(Number(input.value));
                                 answer.answers = answer.answers.filter((value) => {
-                                    if (value === input.value) {
+                                    if (value === Number(input.value)) {
                                         return input.checked;
                                     }
                                     return true;
                                 });
                             }
-                        });
-                        if (!answerUpdated) {
-                            answers.push({
+                            allAnswers[name] = answer;
+                        } else {
+                            allAnswers[name] = {
                                 question: name,
-                                answers: [input.value]
-                            });
+                                answers: [Number(input.value)]
+                            };
                         }
-                        dispatch(updateAnswer(answers));
+                        dispatch(updateAnswer(allAnswers));
                     }}
-                />
+                    defaultChecked={selected}/>
                 <div className="option-content">{renderHTML(option)}</div>
             </label>
         </li>
@@ -53,8 +64,7 @@ Option.propTypes = {
     value: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
     name: PropTypes.number.isRequired,
-    selected: PropTypes.bool.isRequired,
-    selectedAnswers: PropTypes.array
+    classNames: PropTypes.string
 };
 
 export default Option;

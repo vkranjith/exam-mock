@@ -1,9 +1,9 @@
 import {connect} from 'react-redux';
-import {ExamStateInit} from "../../actions";
+import {ExamStatus} from "../../actions";
 import Review from "../../components/exam/Review";
 
 const mapStateToProps = state => ({
-    questions: ExamStateInit.question.data,
+    questions: ExamStatus.QUESTIONS,
     reviewList: state.question.reviewList
 });
 

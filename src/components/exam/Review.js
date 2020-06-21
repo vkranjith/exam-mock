@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Link from "../../containers/elements/Link";
+import Link from "../elements/Link";
 
 const Review = ({questions, reviewList}) => {
+    //console.log('Review', param);
     return (
         <div>
             <ol className="review-list">

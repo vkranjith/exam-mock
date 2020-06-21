@@ -3,20 +3,37 @@ import QuestionsData from '../assets/data/questions';
 /**
  * action creators
  */
-export const startExam = () => ({
-    type: ExamStatus.STATUS_START
+export const welcome = (history) => {
+    history.push(`/`);
+    return {
+        type: ExamStatus.STATUS_WELCOME
+    }
+};
+export const startExam = (history) => {
+    history.push(`/question/1`);
+    return {
+        type: ExamStatus.STATUS_START
+    }
+};
+
+export const clearAnswers = () => ({
+    type: ExamActions.CLEAR_ANSWERS
 });
 
-export const submitExam = () => {
+export const submitExam = (state, history) => {
+    history.push(`/complete`);
     return ({
         type: ExamStatus.STATUS_COMPLETE,
-        score: calculateScore()
+        score: calculateScore(state)
     });
 };
 
-export const reviewQuestions = () => ({
-    type: ExamStatus.STATUS_REVIEW
-});
+export const reviewQuestions = (history) => {
+    history.push('/review');
+    return {
+        type: ExamStatus.STATUS_REVIEW
+    }
+};
 
 export const updateAnswer = (answers) => {
     return ({
@@ -25,18 +42,29 @@ export const updateAnswer = (answers) => {
     });
 };
 
-export const nextQuestion = (currentQuestionID) => {
-    let questionID = Math.min(ExamStateInit.question.data.length, currentQuestionID + 1);
-    if (questionID >= ExamStateInit.question.data.length) {
+export const getQuestionID = (currentQuestionID, type = 'next') => {
+    if (type === 'next') {
+        return Math.min(ExamStatus.QUESTIONS.length, currentQuestionID + 1);
+    } else {
+        return Math.max(0, currentQuestionID - 1);
+    }
+};
+
+export const nextQuestion = (currentQuestionID, history) => {
+    let questionID = getQuestionID(currentQuestionID);
+    if (questionID >= ExamStatus.QUESTIONS.length) {
+        history.push(`/submit`);
         return {
             type: ExamStatus.STATUS_SUBMIT
         };
     }
+    history.push(`/question/${questionID + 1}`);
     return setCurrentQuestion(questionID);
 };
 
-export const previousQuestion = (currentQuestionID) => {
-    let questionID = Math.max(0, currentQuestionID - 1);
+export const previousQuestion = (currentQuestionID, history) => {
+    let questionID = getQuestionID(currentQuestionID, 'prev');
+    history.push(`/question/${questionID + 1}`);
     return setCurrentQuestion(questionID);
 };
 
@@ -60,17 +88,52 @@ export const removeReview = (questionID, reviewList = []) => {
     });
 };
 
-export const calculateScore = () => ({
-    type: ExamActions.CALCULATE
-});
+const calculateScore = (state) => {
+    let score = 0;
+    let total = ExamStatus.QUESTIONS.length;
+    state.question.answers.map((item) => {
+        let answers = ExamStatus.QUESTIONS[item.question].answers;
+        let options = ExamStatus.QUESTIONS[item.question].options;
+        let flag = true;
+        answers.map((answer) => {
+            let index = options.indexOf(answer);
+            if (item.answers.indexOf(index) < 0) {
+                flag = false;
+            }
+            return answer;
+        });
+        if (flag) {
+            score++;
+        }
+        return item;
+    });
+    return Math.round((score / total) * 10000) / 100;
+};
+
+export const updateTime = (timeLeft) => {
+    let type;
+    if (timeLeft <= 0) {
+        type = ExamStatus.STATUS_COMPLETE;
+    } else {
+        type = ExamActions.UPDATE_TIME;
+    }
+    return ({
+        type: type,
+        timeLeft: timeLeft
+    });
+};
 
 export const ExamStatus = {
     STATUS_WELCOME: 0,
     STATUS_START: 1,
     STATUS_SUBMIT: 2,
     STATUS_REVIEW: 3,
-    STATUS_COMPLETE: 4
+    STATUS_COMPLETE: 4,
+    MAX_SCORE: 100,
+    TOTAL_TIME: QuestionsData.time, // in seconds
+    QUESTIONS: QuestionsData.questions
 };
+
 export const ExamActions = {
     ADD_ANSWER: 'ADD_ANSWER',
     ADD_REVIEW: 'ADD_REVIEW',
@@ -80,17 +143,21 @@ export const ExamActions = {
     SUBMIT: 'SUBMIT',
     CALCULATE: 'CALCULATE',
     VALIDATE_ANSWER: 'VALIDATE_ANSWER',
+    UPDATE_TIME: 'UPDATE_TIME',
+    CLEAR_ANSWERS: 'CLEAR_ANSWERS'
 };
 
 export const ExamStateInit = {
     exam: {
         status: ExamStatus.STATUS_WELCOME,
-        score: 0
+        score: 0,
+        startTime: 0,
+        endTime: 0,
+        timeLeft: ExamStatus.TOTAL_TIME
     },
     question: {
         currentQuestion: 0,
         answers: [],
-        reviewList: [],
-        data: QuestionsData.questions
+        reviewList: []
     }
 };

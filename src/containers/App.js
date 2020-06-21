@@ -7,7 +7,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onSubmitClick: () => dispatch(submitExam())
+    onSubmitClick: (state) => dispatch(submitExam(state))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

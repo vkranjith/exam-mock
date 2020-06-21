@@ -1,66 +1,40 @@
 import React from 'react';
 import Header from "./Header";
-import Question from "../containers/exam/Question";
 import Footer from './Footer';
-import Controls from "../containers/exam/Controls";
 import {ExamStatus} from "../actions";
-import Button from "./elements/Button";
 import '../assets/css/App.css';
-import Review from "../containers/exam/Review";
+import Timer from "./elements/Timer";
+import {Switch, Route} from "react-router-dom";
+import ReviewPage from "./exam/pages/Review";
+import CompletePage from "./exam/pages/Complete";
+import SubmitPage from "./exam/pages/Submit";
+import QuestionPage from "./exam/pages/Question";
+import WelcomePage from "./exam/pages/Welcome";
+import {useDispatch, useStore} from "react-redux";
 
-const prepareContent = (state, onSubmitClick) => {
-    let data = "";
-    let containerClass = "exam-area";
-    if (state.exam.status === ExamStatus.STATUS_WELCOME) {
-        data = (
-            <div className={containerClass}>
-                <h2>Welcome</h2>
-            </div>
-        );
-    } else if (state.exam.status === ExamStatus.STATUS_START) {
-        data = (
-            <div className={containerClass}>
-                <h2>Exam Started</h2>
-                <Question/>
-            </div>
-        );
-    } else if (state.exam.status === ExamStatus.STATUS_SUBMIT) {
-        data = (
-            <div className={containerClass}>
-                <h3>Are you sure you are ready to submit?</h3>
-                <Button label="Submit"
-                        id="submit-exam"
-                        onClick={() => onSubmitClick()}
-                        classNames="primary"/>
-            </div>
-        )
-    } else if (state.exam.status === ExamStatus.STATUS_REVIEW) {
-        data = (
-            <div className={containerClass}>
-                <h3>Review questions.</h3>
-                <Review/>
-            </div>
-        )
-    } else if (state.exam.status === ExamStatus.STATUS_COMPLETE) {
-        data = (
-            <div className={containerClass}>
-                <h2>Complete</h2>
-            </div>
-        );
-    }
-    return data;
+const App = ({state}) => {
+    let dispatch = useDispatch();
+    let currentQuestion = useStore().getState().question.currentQuestion;
+    return (
+        <div className="exam-app">
+            <Header/>
+            <Route path="/(review|submit|question)" component={Timer} />
+            <hr/>
+            <Switch>
+                <Route path="/" exact component={WelcomePage} />
+                <Route path="/question/:id" exact component={
+                    (props) => <QuestionPage dispatch={dispatch} match={props.match} currentQuestion={currentQuestion} />
+                } />
+                {state.exam.status === ExamStatus.STATUS_REVIEW ?
+                    <Route path="/review" exact component={ReviewPage}/> : ''}
+                {state.exam.status === ExamStatus.STATUS_SUBMIT ?
+                    <Route path="/submit" exact component={SubmitPage}/> : ''}
+                <Route path="/complete" exact component={CompletePage} />
+            </Switch>
+            <hr/>
+            <Footer/>
+        </div>
+    );
 };
 
-const App = (props) => (
-    <div className="exam-app">
-        <Header/>
-        <hr/>
-        {prepareContent(props.state, props.onSubmitClick)}
-        <hr/>
-        <Controls/>
-        <hr/>
-        <Footer/>
-    </div>
-);
-
-export default App
+export default App;
