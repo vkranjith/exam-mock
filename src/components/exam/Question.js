@@ -2,25 +2,33 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import renderHTML from "react-render-html";
 import Option from "./Option";
-import {ExamStatus} from "../../actions";
+import {ExamData} from "../../actions/variables";
 
 const Question = ({id}) => {
-    let question = ExamStatus.QUESTIONS[id];
-    return (
-        <div id={"question_" + id}>
-            <div className="question"><span className="question-number">{id + 1}.</span>{renderHTML(question.question)}</div>
-            <ol className="options-list">
-                {question.options.map((option, index) => (
-                    <Option key={id + "-" + index}
-                            option={option}
-                            value={index}
-                            name={id}
-                            id={id + "-" + index}
-                            type={question.answers.length > 1 ? "checkbox" : "radio"}/>
-                ))}
-            </ol>
-        </div>
-    );
+    if (ExamData.QUESTIONS[id]) {
+        let question = ExamData.QUESTIONS[id];
+        return (
+            <div id={"question_" + id}>
+                <div className="question"><span
+                    className="question-number">{id + 1}.</span>{renderHTML(question.question.replace(/(?:\r\n|\r|\n)/g, '<br>'))}
+                </div>
+                <ol className="options-list">
+                    {question.options.map((option, index) => (
+                        <Option key={id + "-" + index}
+                                option={option}
+                                value={index}
+                                name={id}
+                                id={id + "-" + index}
+                                type={question.answers.length > 1 ? "checkbox" : "radio"}/>
+                    ))}
+                </ol>
+            </div>
+        );
+    } else {
+        return (
+            <div>No question found!</div>
+        );
+    }
 };
 
 Question.propTypes = {

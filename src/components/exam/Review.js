@@ -2,23 +2,31 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Link from "../elements/Link";
 
-const Review = ({questions, reviewList}) => {
-    //console.log('Review', param);
+const Review = ({questions, reviewList, answers}) => {
     return (
         <div>
             <ol className="review-list">
                 {questions.map((question, index) => {
-                    let marked = false;
-                    if (reviewList.indexOf(index) >= 0) {
-                        marked = true;
-                    }
+                    let subElements = [];
                     let classNames = "review-question-link";
-                    classNames += marked ? " question-marked" : "";
+                    if (reviewList.indexOf(index) >= 0) {
+                        classNames += " question-marked";
+                        subElements.push(<span className='question-marked'>&nbsp;</span>);
+                    }
+                    for (let i = 0; i < answers.length; i++) {
+                        if (Number(answers[i].question) === index) {
+                            console.log(answers[i], index);
+                            classNames += " question-answered";
+                            subElements.push(<span className='question-answered'>&nbsp;</span>);
+                        }
+                    }
+
                     return (
                         <li className={classNames} key={index}>
                             <Link key={index}
                                   questionID={index}
                                   label={"Q." + (index + 1)}/>
+                            {subElements}
                         </li>
                     )
                 })}
@@ -41,6 +49,14 @@ Review.propTypes = {
     ).isRequired,
     reviewList: PropTypes.arrayOf(
         PropTypes.number.isRequired
+    ).isRequired,
+    answers: PropTypes.arrayOf(
+        PropTypes.shape({
+            question: PropTypes.number.isRequired,
+            answers: PropTypes.arrayOf(
+                PropTypes.number.isRequired
+            ).isRequired
+        }).isRequired
     ).isRequired
 };
 

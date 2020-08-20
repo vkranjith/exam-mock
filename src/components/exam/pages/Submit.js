@@ -2,10 +2,10 @@ import React from 'react';
 import Controls from "../../../containers/exam/Controls";
 import PageComponent from "./Page";
 
-const SubmitPage = ({containerClass}) => {
+const SubmitPage = (props) => {
     return (
         <div>
-            <PageComponent containerClass={containerClass}>
+            <PageComponent {...props}>
                 <div>
                     <h3>Are you sure you are ready to submit?</h3>
                 </div>

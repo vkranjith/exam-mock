@@ -1,0 +1,17 @@
+{
+  "name": "Default",
+  "questions": [
+    {
+      "question": "<strong>Follow the steps to setup new question set.</strong>",
+      "options": [
+        "Create a new question set JSON file",
+        "Move the file into assets/data/questions directory"
+      ],
+      "answers": [
+        "Create a new question set JSON file",
+        "Move the file into assets/data/questions directory"
+      ]
+    }
+  ],
+  "time": 600
+}

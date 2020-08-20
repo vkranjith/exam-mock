@@ -12,6 +12,11 @@ import {
     setCurrentQuestion,
     submitExam
 } from "../../actions";
+import {
+    checkAnswer,
+    goBack,
+    proceed
+} from "../../actions/function";
 
 const mapStateToProps = state => ({
     state: state
@@ -29,7 +34,10 @@ const mapDispatchToProps = dispatch => ({
     onPrevClick: (currentID, history) => dispatch(previousQuestion(currentID, history)),
     onReviewClick: (history) => dispatch(reviewQuestions(history)),
     onAddReviewClick: (currentID, reviewList) => dispatch(addToReview(currentID, reviewList)),
-    onRemoveReviewClick: (currentID, reviewList) => dispatch(removeReview(currentID, reviewList))
+    onRemoveReviewClick: (currentID, reviewList) => dispatch(removeReview(currentID, reviewList)),
+    onBackClick: (history) => goBack(history),
+    onProceedClick: (history) => proceed(history),
+    onCheckClick: (questions, currentID) => checkAnswer(questions, currentID)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

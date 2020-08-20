@@ -11,7 +11,7 @@ const Option = ({id, option, value, type, name, classNames = ""}) => {
     let selected = false;
     for (let i=0; i<allAnswers.length; i++) {
         let item = allAnswers[i];
-        if (item.question === name) {
+        if (item && item.question === name) {
             for (let j=0; j<item.answers.length; j++) {
                 let answer = item.answers[j];
                 if (answer === value) {

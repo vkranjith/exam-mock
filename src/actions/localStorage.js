@@ -1,15 +1,19 @@
-import {ExamStateInit} from "./index";
+import {ExamStateInit} from "./variables";
 
 export const loadState = () => {
+    let appState;
     try {
-        const serializedState = localStorage.getItem('state');
+        let serializedState = localStorage.getItem('state');
         if (serializedState === null) {
-            return ExamStateInit;
+            appState = ExamStateInit;
+        } else {
+            serializedState = JSON.parse(serializedState);
+            appState = Object.assign({}, ExamStateInit, serializedState);
         }
-        return Object.assign({}, ExamStateInit, JSON.parse(serializedState));
     } catch (err) {
-        return ExamStateInit;
+        appState = ExamStateInit;
     }
+    return appState;
 };
 
 export const saveState = (state) => {

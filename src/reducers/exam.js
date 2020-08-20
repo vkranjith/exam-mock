@@ -1,4 +1,5 @@
-import {ExamActions, ExamStatus} from "../actions";
+import {ExamActions} from "../actions";
+import {ExamData, ExamStatus} from "../actions/variables";
 import {loadState} from "../actions/localStorage";
 
 const exam = (state = loadState().exam, action) => {
@@ -11,8 +12,7 @@ const exam = (state = loadState().exam, action) => {
             let startTime = new Date();
             return Object.assign({}, state, {
                 status: ExamStatus.STATUS_START,
-                startTime: startTime.getTime(),
-                timeLeft: ExamStatus.TOTAL_TIME
+                startTime: startTime.getTime()
             });
         case ExamStatus.STATUS_SUBMIT:
             return Object.assign({}, state, {
@@ -41,8 +41,20 @@ const exam = (state = loadState().exam, action) => {
             return Object.assign({}, state, {
                 timeLeft: action.timeLeft
             });
+        case ExamActions.REQUEST_QUESTIONS:
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case ExamActions.RECEIVE_QUESTIONS:
+            ExamData.QUESTIONS = action.questions;
+            return Object.assign({}, state, {
+                isFetching: false,
+                questionSet: action.questionSet,
+                name: action.name,
+                total_time: action.time,
+                timeLeft: action.time
+            });
         default:
-
             return state
     }
 };

@@ -32,16 +32,48 @@ header, footer {
 
 .exam-area .options-list li {
     line-height: 1.4em;
+    padding: 5px;
+}
+
+.exam-area .options-list li.highlight {
+    background-color: darkseagreen;
 }
 
 .exam-area .options-list li input {
     margin: 0.25em 10px auto 5px;
-    line-height: 1.4em;
-    height: 1.4em;
 }
 
 .exam-area .options-list li .option-content {
+    display: inline;
+}
+
+.exam-area .review-list {
+    columns: 6;
+}
+
+.review-list .review-question-link {
     display: inline-block;
+    width: 100%;
+    padding: 5px;
+    margin: 5px;
+}
+
+.review-list .review-question-link a {
+
+}
+
+.review-list .review-question-link .question-marked, .review-list .review-question-link .question-answered {
+    display: inline-block;
+    content: " ";
+    width: 5px;
+    height: 1em;
+    line-height: 1em;
+    margin: 2px;
+    background-color: brown;
+}
+
+.review-list .review-question-link .question-answered {
+    background-color: darkseagreen;
 }
 
 .control-actions {
@@ -70,6 +102,7 @@ button {
     border-radius: 5px;
     padding: 5px 15px;
     border: 1px solid black;
+    margin: 2px;
 }
 
 button.primary {
@@ -85,23 +118,5 @@ button.secondary {
 
 button.highlight {
     color: oldlace;
-    background-color: brown;
-}
-
-.review-list .review-question-link {
-    display: inline-block;
-    padding: 5px;
-    margin: 5px;
-}
-
-.review-list .review-question-link a {
-
-}
-
-.review-list .review-question-link.question-marked a:after {
-    display: inline-block;
-    content: " ";
-    width: 10px;
-    height: 10px;
     background-color: brown;
 }

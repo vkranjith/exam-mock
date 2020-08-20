@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from "./Header";
 import Footer from './Footer';
-import {ExamStatus} from "../actions";
+import {ExamRouters, ExamStatus} from "../actions/variables";
 import '../assets/css/App.css';
 import Timer from "./elements/Timer";
 import {Switch, Route} from "react-router-dom";
@@ -10,26 +10,21 @@ import CompletePage from "./exam/pages/Complete";
 import SubmitPage from "./exam/pages/Submit";
 import QuestionPage from "./exam/pages/Question";
 import WelcomePage from "./exam/pages/Welcome";
-import {useDispatch, useStore} from "react-redux";
+import SelectionPage from "./exam/pages/Selection";
 
 const App = ({state}) => {
-    let dispatch = useDispatch();
-    let currentQuestion = useStore().getState().question.currentQuestion;
     return (
         <div className="exam-app">
             <Header/>
             <Route path="/(review|submit|question)" component={Timer} />
             <hr/>
             <Switch>
-                <Route path="/" exact component={WelcomePage} />
-                <Route path="/question/:id" exact component={
-                    (props) => <QuestionPage dispatch={dispatch} match={props.match} currentQuestion={currentQuestion} />
-                } />
-                {state.exam.status === ExamStatus.STATUS_REVIEW ?
-                    <Route path="/review" exact component={ReviewPage}/> : ''}
-                {state.exam.status === ExamStatus.STATUS_SUBMIT ?
-                    <Route path="/submit" exact component={SubmitPage}/> : ''}
-                <Route path="/complete" exact component={CompletePage} />
+                <Route path={ExamRouters.PAGE_WELCOME.path} exact component={WelcomePage} />
+                <Route path={ExamRouters.PAGE_SELECTION.path} exact component={SelectionPage} />
+                <Route path={ExamRouters.PAGE_QUESTION.path} exact component={QuestionPage} />
+                <Route path={ExamRouters.PAGE_REVIEW.path} exact component={ReviewPage}/>
+                <Route path={ExamRouters.PAGE_SUBMIT.path} exact component={SubmitPage}/>
+                <Route path={ExamRouters.PAGE_COMPLETE.path} exact component={CompletePage} />
             </Switch>
             <hr/>
             <Footer/>

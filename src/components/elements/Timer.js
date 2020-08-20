@@ -1,6 +1,7 @@
 import React from 'react';
 import {useDispatch, useStore} from "react-redux";
-import {ExamStatus, updateTime} from "../../actions";
+import {updateTime} from "../../actions";
+import {ExamStatus} from "../../actions/variables";
 
 const calculateTime = (status, timeLeft, dispatch = null) => {
     let dateTime = new Date();

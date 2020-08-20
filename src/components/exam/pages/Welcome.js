@@ -2,10 +2,10 @@ import React from 'react';
 import PageComponent from "./Page";
 import Controls from "../../../containers/exam/Controls";
 
-const WelcomePage = ({containerClass}) => {
+const WelcomePage = (props) => {
     return (
         <div>
-            <PageComponent containerClass={containerClass}>
+            <PageComponent {...props}>
                 <div>
                     <h2>Welcome</h2>
                     <div>

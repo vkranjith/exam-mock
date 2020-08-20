@@ -1,4 +1,5 @@
-import {ExamActions, ExamStatus} from '../actions'
+import {ExamActions} from '../actions';
+import {ExamData, ExamStatus} from '../actions/variables';
 import {loadState} from "../actions/localStorage";
 
 const question = (state = loadState().question, action) => {
@@ -16,13 +17,18 @@ const question = (state = loadState().question, action) => {
             return Object.assign({}, state, {
                 currentQuestion: action.questionID
             });
+        case ExamStatus.STATUS_START:
+            return Object.assign({}, state, {
+                currentQuestion: action.questionID
+            });
         case ExamStatus.STATUS_COMPLETE:
             return Object.assign({}, state, {
                 currentQuestion: 0
             });
         case ExamActions.CLEAR_ANSWERS:
             return Object.assign({}, state, {
-                answers: []
+                answers: [],
+                reviewList: []
             });
         default:
             return state
