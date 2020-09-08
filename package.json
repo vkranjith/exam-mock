@@ -9,6 +9,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2",
     "cross-fetch": "^3.0.5",
+    "deepmerge": "^4.2.2",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-content-loader": "^5.1.0",

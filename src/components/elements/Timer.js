@@ -3,7 +3,7 @@ import {useDispatch, useStore} from "react-redux";
 import {updateTime} from "../../actions";
 import {ExamStatus} from "../../actions/variables";
 
-const calculateTime = (status, timeLeft, dispatch = null) => {
+const calculateTime = (status, timeLeft, dispatch = null, state = null, history = null) => {
     let dateTime = new Date();
     dateTime.setHours(0);
     dateTime.setMinutes(0);
@@ -15,28 +15,29 @@ const calculateTime = (status, timeLeft, dispatch = null) => {
     let seconds = dateTime.getSeconds().toString().padStart(2, '0');
     displayTime = `${hours}:${minutes}:${seconds}`;
     if (dispatch) {
-        dispatch(updateTime(timeLeft));
+        dispatch(updateTime(timeLeft, state, history));
     }
     return displayTime;
 };
 let displayTime = "00:00:00";
 let timerID;
-const Timer = () => {
-    let status = useStore().getState().exam.status;
-    let timeLeft = useStore().getState().exam.timeLeft;
+const Timer = (props) => {
+    let state = useStore().getState();
+    let status = state.exam.status;
+    let timeLeft = state.exam.timeLeft;
     let dispatch = useDispatch();
     if (status === ExamStatus.STATUS_START
         || status === ExamStatus.STATUS_REVIEW
         || status === ExamStatus.STATUS_SUBMIT
     ) {
         clearTimeout(timerID);
-        timerID = setTimeout(() => calculateTime(status, --timeLeft, dispatch), 1000);
+        timerID = setTimeout(() => calculateTime(status, --timeLeft, dispatch, state, props.history), 1000);
     } else {
         calculateTime(status, timeLeft);
     }
     return (
-        <div className="timer">
-            Time: {displayTime}
+        <div className="timer float-right">
+            <b>Time</b>: {displayTime}
         </div>
     );
 };

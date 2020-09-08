@@ -25,7 +25,6 @@ function getAnswer(questions, questionID) {
             answerIDs.push(i);
         }
     }
-    console.log(answerIDs);
     return answerIDs;
 }
 
@@ -68,23 +67,47 @@ export const calculateScore = (state) => {
 };
 
 export const getRouteData = () => {
+    let url = window.location.pathname;
+    for (const objectData of Object.entries(ExamRouters)) {
+        let data = objectData[1];
+        let path = data.path;
+        let params = [];
+        let matches = url.match(data.pattern);
+        if (matches && matches.length > 1) {
+            for (let i = 1; i < matches.length; i++ ) {
+                for (let n = 0; n < data.params.length; n++ ) {
+                    path = path.replace(`:${data.params[n]}`, matches[i]);
+                    params[data.params[n]] = matches[i];
+                }
+            }
+        }
+        if (path === url) {
+            return {
+                "path": data.path,
+                "url": url,
+                "params": params
+            };
+        }
+    }
     return {
-        "path": window.location.pathname
+        "path": url,
+        "url": url,
+        "params": []
     };
 };
 
-export const formatRouterPath = (path, data = {}) => {
+export const formatStringWithVariables = (string, data = {}) => {
     for (const [key, value] of Object.entries(data)) {
-        path = path.replace(":" + key, value);
+        string = string.replace(":" + key, value);
     }
-    return path;
+    return string;
 };
 
 export const getQuestionURL = (questionID) => {
     let data = {
         "id": questionID
     };
-    return formatRouterPath(ExamRouters.PAGE_QUESTION.path, data);
+    return formatStringWithVariables(ExamRouters.PAGE_QUESTION.path, data);
 };
 
 function prepareData(status, params = {}, options = {type: ''}) {
@@ -104,34 +127,39 @@ function prepareData(status, params = {}, options = {type: ''}) {
     return params;
 }
 
-export const verifyRoute = (state, route, dispatch, history) => {
+export const updateHistory = (url, data = {}) => {
+    let history = window.history;
+    history.replaceState({}, data.title, url);
+};
+
+export const updateRoute = (state, route) => {
     let valid = false;
+    let title = '';
     let newStatus = ExamStatus.STATUS_WELCOME;
     let newPath = ExamRouters.PAGE_WELCOME.path;
-    for (const [key, data] of Object.entries(ExamRouters)) {
+    for (const objectData of Object.entries(ExamRouters)) {
+        let data = objectData[1];
         if (route && data.path === route.path) {
             let dataParams = prepareData(data.status, {}, {type: "state", state});
             let routeParams = prepareData(data.status, {}, {type: "route", route});
-            let dataPath = formatRouterPath(data.path, dataParams);
-            let routePath = formatRouterPath(route.path, routeParams);
+            let dataPath = formatStringWithVariables(data.path, dataParams);
+            let routePath = formatStringWithVariables(route.path, routeParams);
             if (data.status === state.exam.status && dataPath === routePath) {
                 valid = true;
             } else {
                 newStatus = data.status;
                 newPath = route.url;
+                title = formatStringWithVariables(data.title, dataParams);
                 break;
             }
         }
     }
     if (!valid) {
-        let data = {
-            type: newStatus
-        };
-        data = prepareData(newStatus, data, {type: "route", for: "action", route});
-        dispatch(data);
-        if (history) {
-            history.push(newPath);
+        updateHistory(newPath, {title: title});
+        state.exam.status = newStatus;
+        if (newStatus === ExamStatus.STATUS_START) {
+            state.question.currentQuestion = Number(route.params.id) - 1;
         }
     }
-    return {state, route};
+    return state;
 };

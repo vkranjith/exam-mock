@@ -9,9 +9,9 @@ const Question = ({id}) => {
         let question = ExamData.QUESTIONS[id];
         return (
             <div id={"question_" + id}>
-                <div className="question"><span
+                <h3 className="question"><span
                     className="question-number">{id + 1}.</span>{renderHTML(question.question.replace(/(?:\r\n|\r|\n)/g, '<br>'))}
-                </div>
+                </h3>
                 <ol className="options-list">
                     {question.options.map((option, index) => (
                         <Option key={id + "-" + index}

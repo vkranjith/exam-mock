@@ -3,6 +3,7 @@
  */
 import {ExamStatus, ExamData, ExamRouters} from "./variables";
 import {getQuestionID, calculateScore, getQuestionURL} from "./function";
+import {getExamData} from "./localStorage";
 
 export const ExamActions = {
     ADD_ANSWER: 'ADD_ANSWER',
@@ -46,9 +47,17 @@ export const clearAnswers = () => ({
 export const submitExam = (state, history) => {
     if (history) {
         history.push(ExamRouters.PAGE_COMPLETE.path);
+        let score = calculateScore(state);
+        let scoreStatus;
+        if (score >= ExamData.PASS_SCORE) {
+            scoreStatus = ExamStatus.SCORE_STATUS_PASS;
+        } else {
+            scoreStatus = ExamStatus.SCORE_STATUS_FAIL;
+        }
         return ({
             type: ExamStatus.STATUS_COMPLETE,
-            score: calculateScore(state)
+            score: score,
+            score_status: scoreStatus
         });
     }
     return welcome(history);
@@ -115,15 +124,14 @@ export const removeReview = (questionID, reviewList = []) => {
     });
 };
 
-export const updateTime = (timeLeft) => {
-    let type;
-    if (timeLeft <= 0) {
-        type = ExamStatus.STATUS_COMPLETE;
+export const updateTime = (timeLeft, state = null, history = null) => {
+    let totalTime = getExamData('totalTime');
+    if (timeLeft <= 0 || timeLeft > totalTime) {
+        return submitExam(state, history);
     } else {
-        type = ExamActions.UPDATE_TIME;
+        return ({
+            type: ExamActions.UPDATE_TIME,
+            timeLeft: timeLeft
+        });
     }
-    return ({
-        type: type,
-        timeLeft: timeLeft
-    });
 };

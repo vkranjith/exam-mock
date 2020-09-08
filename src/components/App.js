@@ -1,9 +1,8 @@
 import React from 'react';
 import Header from "./Header";
 import Footer from './Footer';
-import {ExamRouters, ExamStatus} from "../actions/variables";
+import {ExamRouters} from "../actions/variables";
 import '../assets/css/App.css';
-import Timer from "./elements/Timer";
 import {Switch, Route} from "react-router-dom";
 import ReviewPage from "./exam/pages/Review";
 import CompletePage from "./exam/pages/Complete";
@@ -12,12 +11,10 @@ import QuestionPage from "./exam/pages/Question";
 import WelcomePage from "./exam/pages/Welcome";
 import SelectionPage from "./exam/pages/Selection";
 
-const App = ({state}) => {
+const App = () => {
     return (
         <div className="exam-app">
             <Header/>
-            <Route path="/(review|submit|question)" component={Timer} />
-            <hr/>
             <Switch>
                 <Route path={ExamRouters.PAGE_WELCOME.path} exact component={WelcomePage} />
                 <Route path={ExamRouters.PAGE_SELECTION.path} exact component={SelectionPage} />

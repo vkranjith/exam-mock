@@ -6,7 +6,12 @@ const exam = (state = loadState().exam, action) => {
     switch (action.type) {
         case ExamStatus.STATUS_WELCOME:
             return Object.assign({}, state, {
-                status: action.type
+                status: action.type,
+                isFetching: false,
+                questionSet: "",
+                name: "",
+                totalTime: 0,
+                timeLeft: 0
             });
         case ExamStatus.STATUS_START:
             let startTime = new Date();
@@ -47,12 +52,13 @@ const exam = (state = loadState().exam, action) => {
             });
         case ExamActions.RECEIVE_QUESTIONS:
             ExamData.QUESTIONS = action.questions;
+            let timeLeft = state.status === ExamStatus.STATUS_WELCOME ? action.time : state.timeLeft;
             return Object.assign({}, state, {
                 isFetching: false,
                 questionSet: action.questionSet,
                 name: action.name,
-                total_time: action.time,
-                timeLeft: action.time
+                totalTime: action.time,
+                timeLeft: timeLeft
             });
         default:
             return state

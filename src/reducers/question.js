@@ -1,5 +1,5 @@
 import {ExamActions} from '../actions';
-import {ExamData, ExamStatus} from '../actions/variables';
+import {ExamStatus} from '../actions/variables';
 import {loadState} from "../actions/localStorage";
 
 const question = (state = loadState().question, action) => {

@@ -17,7 +17,6 @@ const QuestionPage = (props) => {
         <div>
             <PageComponent {...props} containerClass="questions-page">
                 <div>
-                    <h2>Exam Started - {state.exam.name}</h2>
                     {state.exam.isFetching || ExamData.QUESTIONS.length === 0 ? (
                         <Placeholder/>
                     ) : (
